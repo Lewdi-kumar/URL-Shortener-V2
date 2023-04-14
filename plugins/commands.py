@@ -286,6 +286,25 @@ async def username_handler(bot, m: Message):
             await m.reply(f"Username updated successfully to {username}")
 
 
+@Client.on_message(filters.command("joinlink") & filters.private)
+@private_use
+async def joinlink_handler(bot, m: Message):
+    user_id = m.from_user.id
+    user = await get_user(user_id)
+    cmd = m.command
+    if len(cmd) == 1:
+        joinlink = user["joinlink"] or None
+        return await m.reply(JOINLINK_TEXT.format(joinlink=joinlink))
+    elif len(cmd) == 2:
+        if "remove" in cmd:
+            await update_user_info(user_id, {"joinlink": ""})
+            return await m.reply("Joinlink Successfully Removed")
+        else:
+            joinlink = cmd[1].strip().replace("@", "")
+            await update_user_info(user_id, {"joinlink": joinlink})
+            await m.reply(f"Joinlink updated successfully to {joinlink}")
+
+
 @Client.on_message(filters.command("banner_image") & filters.private)
 @private_use
 async def banner_image_handler(bot, m: Message):
