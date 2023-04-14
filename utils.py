@@ -49,6 +49,7 @@ async def main_convertor_handler(
                 r"\n", "\n") if user["is_footer_text"] else ""
         )
         username = user["username"] if user["is_username"] else None
+        joinlink = user["joinlink"] if user["is_joinlink"] else None
         banner_image = user["banner_image"] if user["is_banner_image"] else None
 
     caption = None
@@ -80,6 +81,9 @@ async def main_convertor_handler(
 
     # Replacing the username with your username.
     caption = await replace_username(caption, username)
+
+    # Replacing the joinlink with your joinlink.
+    caption = await replace_joinlink(caption, joinlink)
 
     # Getting the function for the user's method
     method_func = METHODS[user_method]
@@ -228,6 +232,14 @@ async def replace_username(text, username):
         usernames = re.findall(r"@[A-Za-z0-9_]+", text)
         for old_username in usernames:
             text = text.replace(old_username, f"@{username}")
+    return text
+
+
+async def replace_joinlink(text, joinlink):
+    if joinlink:
+        joinlinks = re.findall(r"\bhttps?://t(?:elegram)?\.me/(?:joinchat|invite)/\S+\b", text)
+        for old_joinlink in joinlinks:
+            text = text.replace(old_joinlink, f"{joinlink}")
     return text
 
 
