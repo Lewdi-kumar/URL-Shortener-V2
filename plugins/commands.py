@@ -372,6 +372,7 @@ async def me_handler(bot, m: Message):
         shortener_api=user["shortener_api"],
         mdisk_api=user["mdisk_api"],
         username=user["username"],
+        joinlink=user["joinlink"],
         header_text=user["header_text"].replace(r"\n", "\n")
         if user["header_text"]
         else None,
