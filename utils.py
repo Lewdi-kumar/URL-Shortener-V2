@@ -347,6 +347,13 @@ async def get_me_button(user):
                 ),
             ],
             [
+                InlineKeyboardButton("Joinlink", callback_data="ident"),
+                InlineKeyboardButton(
+                    "❌ Disable" if user["is_joinlink"] else "✅ Enable",
+                    callback_data=f'setgs#is_joinlink#{not user["is_joinlink"]}#{str(user_id)}',
+                ),
+            ],
+            [
                 InlineKeyboardButton("Banner Image", callback_data="ident"),
                 InlineKeyboardButton(
                     "❌ Disable" if user["is_banner_image"] else "✅ Enable",
@@ -400,6 +407,7 @@ async def set_commands(app):
         BotCommand("header", "Sets the header."),
         BotCommand("footer", "Sets the footer."),
         BotCommand("username", "Sets the username to replace others."),
+        BotCommand("joinlink", "Sets the joinlink to replace others."),
         BotCommand("banner_image", "Sets the banner image."),
         BotCommand("me", "Displays information about the bot."),
         BotCommand("base_site", "Changes the base site."),
