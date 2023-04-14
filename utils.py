@@ -49,7 +49,6 @@ async def main_convertor_handler(
                 r"\n", "\n") if user["is_footer_text"] else ""
         )
         username = user["username"] if user["is_username"] else None
-        joinlink = user["joinlink"] if user["is_joinlink"] else None
         banner_image = user["banner_image"] if user["is_banner_image"] else None
 
     caption = None
@@ -81,9 +80,6 @@ async def main_convertor_handler(
 
     # Replacing the username with your username.
     caption = await replace_username(caption, username)
-
-    # Replacing the joinlink with your joinlink.
-    caption = await replace_joinlink(caption, joinlink)
 
     # Getting the function for the user's method
     method_func = METHODS[user_method]
@@ -235,14 +231,6 @@ async def replace_username(text, username):
     return text
 
 
-async def replace_joinlink(text, joinlink):
-    if joinlink:
-        joinlinks = re.findall(r"\bhttps?://t(?:elegram)?\.me/(?:joinchat|invite)/\S+\b", text)
-        for old_joinlink in joinlinks:
-            text = text.replace(old_joinlink, f"{joinlink}")
-    return text
-
-
 async def extract_link(string):
     regex = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))"""
     urls = re.findall(regex, string)
@@ -347,13 +335,6 @@ async def get_me_button(user):
                 ),
             ],
             [
-                InlineKeyboardButton("Joinlink", callback_data="ident"),
-                InlineKeyboardButton(
-                    "❌ Disable" if user["is_joinlink"] else "✅ Enable",
-                    callback_data=f'setgs#is_joinlink#{not user["is_joinlink"]}#{str(user_id)}',
-                ),
-            ],
-            [
                 InlineKeyboardButton("Banner Image", callback_data="ident"),
                 InlineKeyboardButton(
                     "❌ Disable" if user["is_banner_image"] else "✅ Enable",
@@ -407,7 +388,6 @@ async def set_commands(app):
         BotCommand("header", "Sets the header."),
         BotCommand("footer", "Sets the footer."),
         BotCommand("username", "Sets the username to replace others."),
-        BotCommand("joinlink", "Sets the joinlink to replace others."),
         BotCommand("banner_image", "Sets the banner image."),
         BotCommand("me", "Displays information about the bot."),
         BotCommand("base_site", "Changes the base site."),
