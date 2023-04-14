@@ -26,6 +26,7 @@ user_commands = [
     "header",
     "footer",
     "username",
+    "joinlink",
     "banner_image",
     "base_site",
     "me",
