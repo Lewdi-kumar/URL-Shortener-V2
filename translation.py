@@ -225,6 +225,21 @@ To remove the current username, use the following command:
 
 This is a helpful way to make sure that all of your posts have a consistent username. Enjoy! 📎"""
 
+JOINLINK_TEXT = """Current Joinlink: {joinlink}
+
+To set the joinlink that will be automatically replaced with other joinlinks in the post, use the following command:
+
+`/joinlink your_joinlink`
+
+__(Note: Do not include the @ symbol in your joinlink.)__
+
+To remove the current joinlink, use the following command:
+
+`/joinlink remove`
+
+This is a helpful way to make sure that all of your posts have a consistent joinlink. Enjoy! 📎"""
+
+
 BANNER_IMAGE = """
 Usage: `/banner_image image_url` or reply to any Image with this command
 
