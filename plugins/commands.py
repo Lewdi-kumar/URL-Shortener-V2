@@ -26,7 +26,6 @@ user_commands = [
     "header",
     "footer",
     "username",
-    "joinlink",
     "banner_image",
     "base_site",
     "me",
@@ -287,25 +286,6 @@ async def username_handler(bot, m: Message):
             await m.reply(f"Username updated successfully to {username}")
 
 
-@Client.on_message(filters.command("joinlink") & filters.private)
-@private_use
-async def joinlink_handler(bot, m: Message):
-    user_id = m.from_user.id
-    user = await get_user(user_id)
-    cmd = m.command
-    if len(cmd) == 1:
-        joinlink = user["joinlink"] or None
-        return await m.reply(JOINLINK_TEXT.format(joinlink=joinlink))
-    elif len(cmd) == 2:
-        if "remove" in cmd:
-            await update_user_info(user_id, {"joinlink": ""})
-            return await m.reply("Joinlink Successfully Removed")
-        else:
-            joinlink = cmd[1].strip().replace("@", "")
-            await update_user_info(user_id, {"joinlink": joinlink})
-            await m.reply(f"Joinlink updated successfully to {joinlink}")
-
-
 @Client.on_message(filters.command("banner_image") & filters.private)
 @private_use
 async def banner_image_handler(bot, m: Message):
@@ -372,7 +352,6 @@ async def me_handler(bot, m: Message):
         shortener_api=user["shortener_api"],
         mdisk_api=user["mdisk_api"],
         username=user["username"],
-        joinlink=user["joinlink"],
         header_text=user["header_text"].replace(r"\n", "\n")
         if user["header_text"]
         else None,
